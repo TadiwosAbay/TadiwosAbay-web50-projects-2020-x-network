@@ -1,0 +1,46 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+
+{% block body %}
+            Posts by users you follow
+            <hr>
+      {% for page_obj in page_objs %}
+           posted by:{{page_obj.user}}
+          {{page_obj.post}}
+          Likes:<div id="post{{page_obj.id}}">{{page_obj.like}}</div>
+          Time:{{page_obj.timestamp}}
+          <button class="btn btn-sm btn-outline-primary" id="like" data-id='{{page_obj.id}}'>Like</button>
+          <hr>
+      {% endfor %}
+      <div class="pagination">
+      <span class="step-links">
+         <nav aria-label="page navigation">
+           <ul class="pagination justify-content-center">
+
+      {% if page_objs.has_other_pages %}
+    <ul class="pagination">
+      {% if page_objs.has_previous %}
+        <a class="page-link" href="?page=1" tabindex="-1">&laquo;first</a>
+        <a class="page-link" href="?page={{page_objs.previous_page_number}}">previous</a>
+      {% endif %}
+      {% for i in page_objs.paginator.page_range %}
+        {% if page_objs.number == i %}
+          <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+        {% else %}
+          <li><a href="?page={{ i }}">{{ i }}</a></li>
+        {% endif %}
+      {% endfor %}
+      {% if page_objs.has_next %}
+        <a class="page-link"href="?page={{ page_objs.next_page_number }}">next</a>
+        <a class="page-link"href="?page={{ page_objs.paginator.num_pages }}">last &raquo;</a>
+      {% endif %}
+
+  {% endif %}
+
+  {% block script %}
+      <script src="{% static 'network/follow.js' %}"></script>
+  {% endblock %}
+
+
+{% endblock %}
